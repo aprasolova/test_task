@@ -1,0 +1,5 @@
+---
+
+disks_partitioning__disk_name: '/dev/xvdf'
+
+disks_encryption__luks_device_name: 'encrypted'

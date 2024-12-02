@@ -1,0 +1,9 @@
+---
+
+- name: CPU C-state management
+  hosts: [ 'servers' ]
+  become: True
+
+  roles:
+
+    - role: cpu_configuration

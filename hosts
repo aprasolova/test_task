@@ -1,0 +1,2 @@
+[servers]
+testhost    ansible_host=63.176.118.183     ansible_user=ubuntu     ansible_ssh_private_key_file=/Users/aprasolova/.ssh/aprasolova.uu

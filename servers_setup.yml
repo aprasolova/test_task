@@ -1,0 +1,38 @@
+---
+
+- name: Disks encryption and network configuration
+  hosts: [ 'servers' ]
+  become: True
+
+  pre_tasks:
+
+    - name: Get the partition next to root
+      ansible.builtin.shell: "lsblk | grep -A1 '/$' | awk '{print $1}' | tail -1 | cut -c7-"
+      register: _snd_partiotion
+
+    - name: Set fact
+      set_fact:
+        _second_partition: "/dev/{{ _snd_partiotion.stdout }}"
+
+  roles:
+
+    - role: disks_partitioning
+
+    - role: disks_encryption
+      disks_encryption__source: "{{ disks_partitioning__disk_name }}{{ disks_partitioning__partition_number }}"
+
+    - role: disks_encryption
+      disks_encryption__source: "{{ _second_partition }}"
+      disks_encryption__luks_device_name: "also_encrypted"
+      disks_encryption__mount_point: '/also_encrypted_volume'
+
+    - role: interface_configuration
+
+  post_tasks:
+    - name: Get CPUs list
+      ansible.builtin.command: "lscpu"
+      register: cpu_info
+
+    - name: Print CPUs list with number of threads per kernel
+      ansible.builtin.debug:
+        msg: "{{ cpu_info.stdout | split('\n') }}"
