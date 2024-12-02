@@ -1,0 +1,35 @@
+---
+
+- name: Install required packages
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ disks_encryption__apt_packages }}"
+
+- name: Read device information
+  community.general.parted:
+    device: "{{ disks_encryption__source }}"
+    unit: MiB
+  register: _disks_encryption__source_info
+
+- name: Make an encryption if device is larger than 16Mb (a minimal LUKS device)
+  when: _disks_encryption__source_info.disk.size > 16
+  block:
+    - name: Encrypt and unlock the partition
+      community.crypto.luks_device:
+        device: "{{ disks_encryption__source }}"
+        state: "opened"
+        passphrase: "{{ lookup('ansible.builtin.password', disks_encryption__partition_password, length=16) }}"
+        name: "{{ disks_encryption__luks_device_name }}"
+
+    - name: Create a filesystem
+      community.general.filesystem:
+        fstype: ext4
+        dev: "{{ disks_encryption__luks_device_path }}"
+
+    - name: Mount the partition
+      ansible.posix.mount:
+        path: "{{ disks_encryption__mount_point }}"
+        src: "{{ disks_encryption__luks_device_path }}"
+        fstype: ext4
+        state: mounted

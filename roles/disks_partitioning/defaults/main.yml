@@ -1,0 +1,7 @@
+---
+
+disks_partitioning__disk_name: '/dev/vda'
+disks_partitioning__partition_number: '1'
+
+disks_partitioning__apt_packages:
+  - parted

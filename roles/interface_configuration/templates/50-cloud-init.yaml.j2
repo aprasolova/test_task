@@ -1,0 +1,10 @@
+network:
+  version: 2
+  ethernets:
+    enX0:
+      match:
+{# the variable below is taken from "command" -> "register" so we take "stdout" of it #}
+        macaddress: "{{ _interface_configuration__macaddr.stdout }}"
+      dhcp4: true
+      dhcp6: false
+      set-name: "{{ interface_configuration__main_iface_name }}"

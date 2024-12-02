@@ -1,0 +1,23 @@
+---
+
+- name: Ensure a device exists
+  ansible.builtin.stat:
+    path: "{{ disks_partitioning__disk_name }}"
+  register: _disks_partitioning__device
+
+- name: Fail the role if device doesn't exist
+  ansible.builtin.fail:
+    msg: "The disk {{ disks_partitioning__disk_name }} doesn't exist"
+  when: _disks_partitioning__device.stat.exists == 'false'
+
+- name: Install required packages
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ disks_partitioning__apt_packages }}"
+
+- name: Format the disk
+  community.general.parted:
+    device: "{{ disks_partitioning__disk_name }}"
+    number: "{{ disks_partitioning__partition_number }}"
+    state: present

@@ -1,0 +1,7 @@
+---
+
+- name: Ensure CPU C-state is as expected
+  ansible.builtin.lineinfile:
+    path: '/sys/module/intel_idle/parameters/max_cstate'
+    state: present
+    line: "{{ '0' if cpu_configuration__disable_cstate else cpu_configuration__cstate_num }}"

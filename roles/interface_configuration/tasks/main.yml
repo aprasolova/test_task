@@ -1,0 +1,21 @@
+---
+
+- name: Get interface's MAC address
+  ansible.builtin.shell: grep macaddress {{ interface_configuration__iface_conf_path }} | cut -d\" -f 2
+  register: _interface_configuration__macaddr
+  changed_when: false
+
+- name: Set interface config
+  ansible.builtin.template:
+    src: "50-cloud-init.yaml.j2"
+    dest: "{{ interface_configuration__iface_conf_path }}"
+    mode: '0600'
+  register: iface_rename
+
+- name: Apply interface config
+  ansible.builtin.command: "netplan apply"
+
+- name: Inform if interface name was changed
+  debug:
+    msg: "I've changed the main interface name to {{ interface_configuration__main_iface_name }}"
+  when: iface_rename.changed

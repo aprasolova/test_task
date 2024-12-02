@@ -1,0 +1,4 @@
+---
+
+cpu_configuration__disable_cstate: false
+cpu_configuration__cstate_num: 9

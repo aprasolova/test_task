@@ -1,0 +1,4 @@
+---
+
+interface_configuration__main_iface_name: "net0"
+interface_configuration__iface_conf_path: "/etc/netplan/50-cloud-init.yaml"

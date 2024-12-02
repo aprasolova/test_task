@@ -1,0 +1,12 @@
+---
+
+disks_encryption__luks_device_name: "something_encrypted"
+disks_encryption__luks_device_path: "/dev/mapper/{{ disks_encryption__luks_device_name }}"
+disks_encryption__source: ""
+
+disks_encryption__partition_password: "secrets/{{ inventory_hostname }}/{{ disks_encryption__source | regex_replace('/', '_') }}_password"
+
+disks_encryption__mount_point: '/encrypted_volume'
+
+disks_encryption__apt_packages:
+  - cryptsetup

@@ -1,0 +1,10 @@
+---
+
+- name: ansible.posix
+  src: https://github.com/ansible-collections/ansible.posix.git
+
+- name: community.crypto
+  src: https://github.com/ansible-collections/community.crypto.git
+
+- name: community.general
+  src: https://github.com/ansible-collections/community.general.git
